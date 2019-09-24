@@ -343,7 +343,33 @@ var main = function(txt) {
 		} 
 	}
 
-	let dwitterFuncArr = [u, u2];
+	var u3 = function() {
+		var n = window.innerWidth;
+
+		c.width = 954*(windowWidthPx/1920);
+
+		if (state.fullScreen) {
+			c.width = window.innerWidth;
+		}
+
+		x.fillStyle = "#96194c"; 
+		x.fillRect(0, 0, c.width, c.height);
+
+		var e=255;
+		var w = function(_){ return [...Array(_).keys()].map(Math.cos) };
+
+		w(n).map(i=>{
+			let t = (Date.now() - millis_start) / 1000.0;
+
+			t /= 8;
+
+			x.font='bold '+n%4+'em Geomanist';
+			x.strokeStyle='rgba('+(Math.tan(t/i)*e)+','+(e*i)+','+(e-Math.sin(t*i)*e)+')';
+			x.strokeText(sentences[parseInt(t)%sentences.length],Math.sin(t*i)*n,i*n,2e3*t/i)
+		});
+	}
+
+	let dwitterFuncArr = [u, u2, u3];
 
 	let funcChoice = rng.choice(dwitterFuncArr);
 
