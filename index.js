@@ -496,7 +496,10 @@ function updateState(rawUserInput) {
 		state.keyWordArr.push(...newNouns);
 	}
 
-	let newVerbs = userResponseNlpNorm.verbs().toGerund().out("array").map(function(x){ return x.split(' ').pop(); });
+	let newVerbs = userResponseNlpNorm.verbs().toGerund().out("array").map(function(x){ 
+		return x.split(' ').pop(); }).filter(function(kw){
+			return kw.toLowerCase() != "am" && kw.toLowerCase() != "being" && kw.toLowerCase() != "are";
+		});
 
 	console.log(newVerbs);
 
@@ -505,9 +508,7 @@ function updateState(rawUserInput) {
 		state.keyWordArr.push(...newVerbs);
 	}
 
-	state.keyWordArr.shuffle().filter(function(kw){ 
-		return kw.toLowerCase() != "am" && kw.toLowerCase() != "being" && kw.toLowerCase() != "are";
-	});
+	state.keyWordArr.shuffle();
 
 	if (state.curKey === "introTxt") {
 		state.userName = userResponseNlpNorm.people().out("string").trim().toProperCase();
