@@ -3,6 +3,42 @@ let timeoutControl;
 
 $( window ).on( "load", function(){
 
+// Random Number Generator
+// https://stackoverflow.com/questions/424292/seedable-javascript-random-number-generator
+
+function RNG(seed) {
+  // LCG using GCC's constants
+  this.m = 0x80000000; // 2**31;
+  this.a = 1103515245;
+  this.c = 12345;
+
+  this.state = seed ? seed : Math.floor(Math.random() * (this.m - 1));
+}
+RNG.prototype.nextInt = function() {
+  this.state = (this.a * this.state + this.c) % this.m;
+  return this.state;
+}
+RNG.prototype.nextFloat = function() {
+  // returns in range [0,1]
+  return this.nextInt() / (this.m - 1);
+}
+RNG.prototype.nextRange = function(start, end) {
+  // returns in range [start, end): including start, excluding end
+  // can't modulu nextInt because of weak randomness in lower bits
+  var rangeSize = end - start;
+  var randomUnder1 = this.nextInt() / this.m;
+  return start + Math.floor(randomUnder1 * rangeSize);
+}
+RNG.prototype.choice = function(array) {
+  return array[this.nextRange(0, array.length)];
+}
+
+// var randomSeed = Math.ceil(Math.random()*65536);
+var rng = new RNG(parseInt(Date.now()));
+
+// End of Random Number Generator
+
+
 let windowWidthPx = window.innerWidth;
 let windowHeightPx = window.innerHeight;
 
@@ -21,7 +57,7 @@ String.prototype.toProperCase = function () {
 };
 
 Array.prototype.shuffle = function () {
-  return this.sort(() => Math.random() - 0.5);
+  return this.sort(() => rng.nextFloat() - 0.5);
 };
 
 let skipTrue = true;
@@ -154,12 +190,6 @@ var main = function(txt) {
 
 	var u=function(){
 
-
-
-
-		// millis_start = t;
-		// main
-
 		var n = 954*(windowWidthPx/1920);
 		c.width = n;
 
@@ -168,8 +198,6 @@ var main = function(txt) {
 			c.width = n;
 		}
 
-		// var canvas = document.getElementById("canvas");
-		// var ctx = canvas.getContext("2d");
 		x.fillStyle = "#96194c"; 
 		x.fillRect(0, 0, c.width, c.height);
 
@@ -177,32 +205,20 @@ var main = function(txt) {
 
 			for(let j=0;j<16;j++) {
 
-
-				// let t = function(){ return Date.now() - millis_start; } ;
 				(function(){
 
+					let t = (Date.now() - millis_start) / 1000.0;
 
-				// var blackText = true;
-				// if (Math.random() > 0.5){
-				// 	blackText = false;
-				// }
-
-				// var substringChunkLen = 16;
-				// var substringStart = substringChunkLen*i;
-				// var substringEnd = substringStart+substringChunkLen;
-
-				let t = (Date.now() - millis_start) / 1000.0;
-
-				var p = Math.cos(i);
-				var q = Math.sin(p*j);
-				var y = Math.tan(t*q*p);
-				x.font = "64px Lora";
-				var rVal = p*255;
-				var gVal = q*255;
-				var bVal = q*255;
-				x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+(t/32.0+q/256.0)+')';
-				x.fillText(sentences[j%sentences.length],n*p*y*p/2+n/2,n*q*y*q/4+n/4,2e3*y*p);					
-			})();
+					var p = Math.cos(i);
+					var q = Math.sin(p*j);
+					var y = Math.tan(t*q*p);
+					x.font = "64px Geomanist";
+					var rVal = p*255;
+					var gVal = q*255;
+					var bVal = q*255;
+					x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+(t/32.0+q/256.0)+')';
+					x.fillText(sentences[j%sentences.length],n*p*y*p/2+n/2,n*q*y*q/4+n/4,2e3*y*p);					
+				})();
 
 				// x.
 			}
@@ -210,11 +226,50 @@ var main = function(txt) {
 
 	}
 
+	var u2 = function() {
+		var n = 954*(windowWidthPx/1920);
+		c.width = n;
+
+		if (state.fullScreen) {
+			n = window.innerWidth;
+			c.width = n;
+		}
+
+		x.fillStyle = "#96194c"; 
+		x.fillRect(0, 0, c.width, c.height);
+
+		for(let p=0;p<512;p++) {
+			(function(){
+
+				let t = (Date.now() - millis_start) / 1000.0;
+				t /= 8;
+
+
+				let i=Math.cos(p);
+				let j=Math.tan(t/i);
+				let k=1/Math.sin(t*i);
+
+				x.font=p%4+'em Geomanist';
+
+				var rVal = i*255;
+				var gVal = k*255;
+				var bVal = j*255;
+				x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+(t/4.0+j/256.0)+')';
+
+				x.fillText(sentences[p%sentences.length],n*i/4+n/2,n*j/512+n/4,j*p/i/16);
+
+			})();
+		} 
+	}
+
+	let dwitterFuncArr = [u, u2];
+
+	let funcChoice = rng.choice(dwitterFuncArr);
+
 	for (let k = 0, p = Promise.resolve(); k < 65535; k++) {
 	    p = p.then(_ => new Promise(resolve =>
 	        timeoutControl = window.setTimeout(function () {
-	            // u(k);
-	            u();
+	            funcChoice()
 	            resolve();
 	        },16.666)
 	    ));
@@ -224,7 +279,7 @@ var main = function(txt) {
 
 
 function randomChoice(arr) {
-	return arr[Math.floor(Math.random()*arr.length)]
+	return rng.choice(arr);
 }
 
 var goFS = document.getElementById("goFS");
@@ -317,7 +372,7 @@ function updateState() {
 	state.keyWordArr.shuffle();
 
 	if (state.curKey === "introTxt") {
-		state.userName = userResponseNlp.people().out("string").trim().toProperCase();
+		state.userName = userResponseNlpNorm.people().out("string").trim().toProperCase();
 
 		if (!state.userName && Array.isArray(newNouns) && newNouns.length > 0) {
 			state.userName = newNouns[newNouns.length-1];
@@ -330,7 +385,7 @@ function updateState() {
 	}
 
 	state.curKey = eventLoopArr.pop();	
-	let curTxt = replaceTerms( state[ state.curKey ].pop() );
+	let curTxt = replaceTerms( state[ state.curKey ].shuffle().pop() );
 	main( curTxt );
 }
 
