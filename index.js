@@ -3,6 +3,8 @@ let timeoutControl;
 
 $( window ).on( "load", function(){
 
+$("#loading").fadeOut(2048);
+
 // Random Number Generator
 // https://stackoverflow.com/questions/424292/seedable-javascript-random-number-generator
 
@@ -133,7 +135,7 @@ $('canvas').css('top', (172*(windowWidthPx/1920))+'px');
 
 // https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
 String.prototype.toProperCase = function () {
-    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    return this.charAt(0).toUpperCase() + this.substr(1);
 };
 
 Array.prototype.shuffle = function () {
@@ -376,13 +378,33 @@ var main = function(txt) {
 	let funcChoice = rng.choice(dwitterFuncArr);
 
 	for (let k = 0, p = Promise.resolve(); k < 65535; k++) {
+		if (k === 0) {
+
+		    p = p.then(_ => new Promise(resolve =>
+		        timeoutControl = window.setTimeout(function () {
+		            $('#loading').fadeOut();
+		            resolve();
+		        },16.666)
+		    ));
+
+		}
+
 	    p = p.then(_ => new Promise(resolve =>
 	        timeoutControl = window.setTimeout(function () {
-	            funcChoice()
+	            funcChoice();
 	            resolve();
 	        },16.666)
 	    ));
 	}
+
+	// p.then(function(){
+	// 	return newPromise(resolve => {
+
+	// 	});
+
+		
+	//     resolve();
+ //    });
 
 }
 
@@ -426,16 +448,15 @@ let replaceTerms = function(strToRepl) {
 		"userName": state.userName
 	}
 
-	if (state.keyWordArr.length > 1) {
-		replDict["keyWord"] = state.keyWordArr.pop().toProperCase();
-	}
 
+	if (state.keyWordArr.length > 3) {
+		replDict["keyWord"] = (`${state.keyWordArr.pop()}, ${state.keyWordArr.pop()}, & ${state.keyWordArr.pop()}`).toProperCase();
+	}
 	else if (state.keyWordArr.length > 2) {
 		replDict["keyWord"] = (`${state.keyWordArr.pop()} & ${state.keyWordArr.pop()}`).toProperCase();
 	}
-
-	else if (state.keyWordArr.length > 3) {
-		replDict["keyWord"] = (`${state.keyWordArr.pop()}, ${state.keyWordArr.pop()}, & ${state.keyWordArr.pop()}`).toProperCase();
+	else if (state.keyWordArr.length > 1) {
+		replDict["keyWord"] = state.keyWordArr.pop().toProperCase();
 	}
 
 	let newStr = strToRepl;
@@ -447,10 +468,10 @@ let replaceTerms = function(strToRepl) {
 	return newStr;
 }
 
-function updateState() {
+function updateState(rawUserInput) {
 	$('#goGoGo').text( state.emojiArr.pop() )
 
-	let userResponseNlp = nlp( $("#userTxtInput").val() );
+	let userResponseNlp = nlp( rawUserInput );
 
 	console.log(userResponseNlp.out('string'));
 
@@ -500,46 +521,30 @@ function updateState() {
 	main( curTxt );
 }
 
+
+let dialog = document.querySelector('dialog');
+    // var showDialogButton = document.querySelector('#show-dialog');
+if (!dialog.showModal) {
+  dialogPolyfill.registerDialog(dialog);
+}
+
+dialog.querySelector('.close').addEventListener('click', function() {
+	dialog.close();
+	$("#userTxtInput").focus();
+});
+
 function buttonCallback() {
-	
-	updateState();
 
-	// if (ifTrueSkip()) {
-	// 	updateState();
-	// }
+	let userInput = $("#userTxtInput").val().trim();
 
-	// while ( ifTrueSkip() ) {
-	// 	updateState();
-	// }
-
-
-	// let skipTrue = ifTrueSkip();
-
-	// if (!skipTrue) {
-	// 	updateState();
-	// }
-
-	// skipTrue = ifTrueSkip();
-
-	// while (skipTrue) {
-
-	// 	updateState();
-
-	// 	console.log(state);
-
-	// 	skipTrue = ifTrueSkip();
-
-	// }
-
-	// if (skipTrue === "END") {
-
-	// 	// TODO END
-	// 	// end();
-
-	// 	return;
-
-	// }
-
+	if (!userInput && state.curKey != "thankYouTxt" && state.curKey != "picResponse" && state.curKey != "collabResponse" && state.curKey != "endTxt" ) {
+		// popup type something
+		// let dialog = document.querySelector('dialog');
+		dialog.showModal();
+	}
+	else {
+		updateState(userInput);
+	}
 
 }
 
@@ -547,25 +552,28 @@ $('#goGoGo').text( state.emojiArr.pop() );
 $('#goGoGo').click(buttonCallback);
 
 goFS.addEventListener("click", function() {
-  
-	$('#'+"fullScreenControl").hide();
-	document.body.requestFullscreen();
-	$('#'+"text-input-box").fadeIn();
-	$("#userTxtInput").focus();
-	$('#goGoGo').fadeIn();
 
-	state.fullScreen = true;
+	// window.setTimeout(function(){
+		$('#loading').show();
+		$('#'+"fullScreenControl").hide();
+		document.body.requestFullscreen();
+		$('#'+"text-input-box").fadeIn();
+		$("#userTxtInput").focus();
+		$('#goGoGo').fadeIn();
 
-	$('canvas').css('position', 'static');
+		state.fullScreen = true;
 
-	windowWidthPx = window.innerWidth;
-	windowHeightPx = window.innerHeight;
+		$('canvas').css('position', 'static');
 
-	$('#bg').fadeOut();
+		windowWidthPx = window.innerWidth;
+		windowHeightPx = window.innerHeight;
 
-	state.curKey = eventLoopArr.pop();
-	state.introTxtChoice = randomChoice(state.introTxt);
-	main( state.introTxtChoice );
+		$('#bg').fadeOut();
+
+		state.curKey = eventLoopArr.pop();
+		state.introTxtChoice = randomChoice(state.introTxt);
+		main( state.introTxtChoice );
+	// }, 1024);
 
 }, false);
 

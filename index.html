@@ -5,6 +5,8 @@
 
 <link href="./css/normalize.css" rel="stylesheet">
 <link href="./css/material.min.css" rel="stylesheet">
+<link href="./css/dialog-polyfill.css" rel="stylesheet">
+<link href="./css/loaders.css" rel="stylesheet">
 
 <style>
 
@@ -127,12 +129,52 @@ input {
     /*border-bottom: 1px solid #fff !important;*/
 }
 
+.mdl-button, .mdl-js-button, .mdl-button--fab, .mdl-js-ripple-effect {
+	color: #fff !important;
+}
+
+dialog div p {
+	color: #333 !important;
+}
+
+#loading {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 13;
+	background-color: #96194c;
+}
+
+.loader {
+	transform: scale(2.0, 2.0);
+
+}
+
+.square-spin > div {
+	z-index: 15;
+	margin: 350px auto;
+	/*transform: scale(4.0,4.0);*/
+	background-color: #FFF;
+	color: #96194c;
+}
+ 
 </style>
 
 </head>
 
 
 <body>
+
+<div id="loading">
+	<div class="loader">
+		<div class="square-spin"><div>
+			Hello World
+		</div></div>
+	</div>
+	<!-- <div class="square-spin"></div> -->
+</div>
 
 <img src="./assets/bg.png" id="bg">
 
@@ -146,7 +188,7 @@ input {
 
 	<div id="text-input-box" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 		<label class="mdl-textfield__label" for="userTxtInput" id="userTxtInputLabel">Type here...</label>
-		<input class="mdl-textfield__input" type="text" id="userTxtInput" name="userTxtInput" required>
+		<input class="mdl-textfield__input" type="text" id="userTxtInput" name="userTxtInput">
 		<button id="goGoGo" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"></button>
 	</div>
 
@@ -155,11 +197,26 @@ input {
 
 <canvas id="myCanvas"></canvas>
 
+<dialog class="mdl-dialog">
+	<h4 class="mdl-dialog__title">Type something!</h4>
+	<div class="mdl-dialog__content">
+	  <p>
+	    Communication with AI is a two-way street.
+	  </p>
+	</div>
+	<div class="mdl-dialog__actions">
+	  <button type="button" class="mdl-button close">Okay.</button>
+	</div>
+</dialog>
 
-<script src="https://unpkg.com/compromise"></script>
+<script src="./js/dialog-polyfill.js"></script>
+<script src="./js/dialog-polyfill.esm.js"></script>
+<script src="./js/compromise.min.js"></script>
 <script src="./js/material.js"></script>
 <script src="./js/jquery.min.js"></script>
+<script src="./js/loaders.css.js"></script>
 <script src="./index.js"></script>
+
 
 </body>
 
