@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>further dot business</title>
+
+<link href="./css/normalize.css" rel="stylesheet">
+<link href="./css/material.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+
+<style>
+
+html {
+	background-color: #96194c;
+}
+
+body {
+	background-color: #96194c;
+	color: #FFF;
+}
+
+canvas {
+    /*display: fixed;*/
+    display: block;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+p {
+	font-family: 'Lora', monospace;
+	font-size: 16px;
+}
+
+#buttonControl {
+	display: none;
+}
+
+#buttonNarrative {
+	display: none;
+}
+
+#buttondiv {
+	position: fixed;
+	/*margin: 0 auto;*/
+	/*bottom: 256px;*/
+/*	top: 64px;
+	left: 50%;*/
+	width: 100%;
+	text-align: center;
+	bottom: 0;
+	margin: 0 auto 16% auto;
+	z-index: 9;
+}
+
+.myButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #a1a7cb;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #a1a7cb;
+	box-shadow:inset 0px 1px 0px 0px #a1a7cb;
+	background-color:transparent;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	border:2px solid #bbe4f0;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: 'Lora', monospace;
+	/*font-style: italic;*/
+	font-size:28px;
+	font-weight: 400;
+	padding:15px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #92a5d0;
+}
+.myButton:hover {
+	background-color: rgba(200, 247, 197, 0.5);
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+#text-input-box {
+	display: none;
+	width: 60%;
+	margin: 0 auto;
+}
+
+#userTxtInputLabel {
+	color: #FFF;
+}
+
+#goGoGo {
+	/*padding-top: 64px;*/
+	top: 128px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<nav id="buttondiv">
+	<div id="fullScreenControl">
+		<p>turn audio on &amp; go</p>
+		<p><small><em>[ tap or click ]</em></small></p>
+		<button id="goFS" class="myButton">fullscreen</button>
+	</div>
+
+	<div id="text-input-box" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		<label class="mdl-textfield__label" for="userTxtInput" id="userTxtInputLabel">Type here...</label>
+		<input class="mdl-textfield__input" type="text" id="userTxtInput" name="userTxtInput" required>
+		<button id="goGoGo" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"></button>
+	</div>
+
+
+</nav>
+
+<canvas id="myCanvas"></canvas>
+
+
+<script src="https://unpkg.com/compromise"></script>
+<script src="./js/material.js"></script>
+<script src="./js/jquery.min.js"></script>
+<script src="./index.js"></script>
+
+</body>
+
+</html>
