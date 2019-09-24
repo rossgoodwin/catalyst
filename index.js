@@ -128,7 +128,7 @@ let bgImg = document.getElementById('bg');
 bgImg.width = windowWidthPx;
 
 $('canvas').css('right', (494*(windowWidthPx/1920))+'px');
-$('canvas').css('top', (172*(windowWidthPx/1920))+'px');
+$('canvas').css('top', (175*(windowWidthPx/1920))+'px');
 // bgImg.height = windowHeightPx;
 
 
@@ -200,12 +200,12 @@ let state = {
 	],
 
 	thankYouTxt: [
-		"{{keyWord}}? Interesting, {{userName}}.",
-		"{{keyWord}}! Thanks for sharing that, {{userName}}.",
-		"{{keyWord}}... Thank you so much for sharing that, {{userName}}.",
-		"{{keyWord}}. That's fascinating. Thanks so much for letting me know.",
-		"{{keyWord}}, how fascinating! {{userName}}: Thank you so much for letting me know that.",
-		"Very, very fascinating: {{keyWord}}. Thank you very much for that, {{userName}}."
+		"{{keyWord}}? Interesting, {{userName}}. Please, tell me more.",
+		"{{keyWord}}! Thanks for sharing that, {{userName}}. Tell me more about it.",
+		"{{keyWord}}... Thank you so much for sharing that, {{userName}}. Tell me more.",
+		"{{keyWord}}. That's fascinating. Thanks so much for letting me know. I'd love to know more.",
+		"{{keyWord}}, how fascinating! {{userName}}: Thank you so much for letting me know that. Please, more.",
+		"Very, very fascinating: {{keyWord}}. Thank you very much for that, {{userName}}. More information?"
 	],
 
 	genQuestion2Txt: [
