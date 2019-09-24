@@ -39,6 +39,86 @@ var rng = new RNG(parseInt(Date.now()));
 // End of Random Number Generator
 
 
+// TTS
+// https://github.com/mdn/web-speech-api/blob/master/speak-easy-synthesis/script.js
+
+var synth = window.speechSynthesis;
+
+// var inputForm = document.querySelector('form');
+// var inputTxt = document.querySelector('.txt');
+// var voiceSelect = document.querySelector('select');
+
+// var pitch = document.querySelector('#pitch');
+// var pitchValue = document.querySelector('.pitch-value');
+// var rate = document.querySelector('#rate');
+// var rateValue = document.querySelector('.rate-value');
+
+// var voices = [];
+
+function populateVoiceList() {
+  var voices = synth.getVoices().sort(function (a, b) {
+      const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+      if ( aname < bname ) return -1;
+      else if ( aname == bname ) return 0;
+      else return +1;
+  });
+  var candidateVoices = voices.filter(function(v){
+  	return v.lang.substr(0,2).toLowerCase() === 'en';
+  });
+
+  console.log(candidateVoices);
+
+  return rng.choice(candidateVoices);
+  // voiceSelect.innerHTML = '';
+  // for(i = 0; i < voices.length ; i++) {
+  //   var option = document.createElement('option');
+  //   option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+    
+  //   if(voices[i].default) {
+  //     option.textContent += ' -- DEFAULT';
+  //   }
+
+  //   option.setAttribute('data-lang', voices[i].lang);
+  //   option.setAttribute('data-name', voices[i].name);
+  //   voiceSelect.appendChild(option);
+  // }
+  // voiceSelect.selectedIndex = selectedIndex;
+}
+
+// populateVoiceList();
+
+// if (speechSynthesis.onvoiceschanged !== undefined) {
+//   speechSynthesis.onvoiceschanged = populateVoiceList;
+// }
+
+function speak(txtToSpeak){
+    if (synth.speaking) {
+        console.error('speechSynthesis.speaking');
+        return;
+    }
+    var utterThis = new SpeechSynthesisUtterance(txtToSpeak);
+    utterThis.onend = function (event) {
+        console.log('SpeechSynthesisUtterance.onend');
+    }
+    utterThis.onerror = function (event) {
+        console.error('SpeechSynthesisUtterance.onerror');
+    }
+    // var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+    // for(i = 0; i < voices.length ; i++) {
+    //   if(voices[i].name === selectedOption) {
+    //     utterThis.voice = voices[i];
+    //     break;
+    //   }
+    // }
+    utterThis.voice = populateVoiceList();
+    // utterThis.pitch = pitch.value;
+    // utterThis.rate = rate.value;
+    synth.speak(utterThis);
+}
+
+// speak("Testing. Testing. 1. 2. 3. Testing. Testing. 1. 2. 3.")
+// End TTS
+
 let windowWidthPx = window.innerWidth;
 let windowHeightPx = window.innerHeight;
 
@@ -174,6 +254,7 @@ var main = function(txt) {
 	window.clearTimeout(timeoutControl);
 
 	$('#userTxtInputLabel').text(txt);
+	speak(txt);
 
 	var c = document.getElementById('myCanvas');
 	c.height = 556*(windowWidthPx/1920);
@@ -201,9 +282,9 @@ var main = function(txt) {
 		x.fillStyle = "#96194c"; 
 		x.fillRect(0, 0, c.width, c.height);
 
-		for(let i=0;i<32;i++) {
+		for(let i=0;i<16;i++) {
 
-			for(let j=0;j<16;j++) {
+			for(let j=0;j<8;j++) {
 
 				(function(){
 
@@ -346,6 +427,8 @@ function updateState() {
 	console.log(userResponseNlp.out('string'));
 
 	$('#userTxtInput').val("");
+
+	$("#userTxtInput").blur();
 
 	let userResponseNlpNorm = userResponseNlp.normalize( parentheses = true, possessive = true, plurals = true, verbs = true, honorifics = true );
 
