@@ -47,12 +47,6 @@ p {
 	color: #FFF !important;
 }
 
-nav {
-	background-color: rgba(51,51,51,0.5);
-	/*padding: 0;*/
-	padding: 64px 0;
-}
-
 input {
 	color: #FFF;
 }
@@ -66,6 +60,9 @@ input {
 }
 
 #buttondiv {
+	background-color: rgba(51,51,51,0.5);
+	/*padding: 0;*/
+	padding: 64px;
 	position: fixed;
 	/*margin: 0 auto;*/
 	/*bottom: 256px;*/
@@ -75,6 +72,7 @@ input {
 	text-align: center;
 	bottom: 0;
 	margin: 0 auto;
+	padding-bottom: 256px;
 	z-index: 9;
 }
 
@@ -109,17 +107,19 @@ input {
 
 #text-input-box {
 	display: none;
-	width: 60%;
+	width: 100%;
 	margin: 0 auto;
 }
 
 #userTxtInputLabel {
+	width: 100%;
 	color: #FFF;
 }
 
 #goGoGo {
-	/*padding-top: 64px;*/
-	top: 128px;
+	position: fixed;
+	bottom: 200px;
+	left: 64px;
 }
 
 .mdl-textfield__input{
@@ -137,7 +137,7 @@ input {
 <img src="./assets/bg.png" id="bg">
 
 
-<nav id="buttondiv">
+<div id="buttondiv">
 	<div id="fullScreenControl">
 		<p>turn audio on &amp; go</p>
 		<p><small>[ tap or click ]</small></p>
@@ -151,7 +151,7 @@ input {
 	</div>
 
 
-</nav>
+</div>
 
 <canvas id="myCanvas"></canvas>
 
