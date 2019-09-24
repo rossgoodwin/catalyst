@@ -290,6 +290,8 @@ var main = function(txt) {
 
 					let t = (Date.now() - millis_start) / 1000.0;
 
+					t /= 8;
+
 					var p = Math.cos(i);
 					var q = Math.sin(p*j);
 					var y = Math.tan(t*q*p);
@@ -297,7 +299,7 @@ var main = function(txt) {
 					var rVal = p*255;
 					var gVal = q*255;
 					var bVal = q*255;
-					x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+(t/32.0+q/256.0)+')';
+					x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+((t/32.0+q/256.0)*8)+')';
 					x.fillText(sentences[j%sentences.length],n*p*y*p/2+n/2,n*q*y*q/4+n/4,2e3*y*p);					
 				})();
 
@@ -323,7 +325,7 @@ var main = function(txt) {
 			(function(){
 
 				let t = (Date.now() - millis_start) / 1000.0;
-				t /= 8;
+				t /= 32;
 
 
 				let i=Math.cos(p);
@@ -335,7 +337,7 @@ var main = function(txt) {
 				var rVal = i*255;
 				var gVal = k*255;
 				var bVal = j*255;
-				x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+(t/4.0+j/256.0)+')';
+				x.fillStyle = 'rgba('+rVal+','+gVal+','+bVal+','+((t/4.0+j/256.0))*32+')';
 
 				x.fillText(sentences[p%sentences.length],n*i/4+n/2,n*j/512+n/4,j*p/i/16);
 
@@ -358,10 +360,10 @@ var main = function(txt) {
 		var e=255;
 		var w = function(_){ return [...Array(_).keys()].map(Math.cos) };
 
-		w(n).map(i=>{
+		w(512).map(i=>{
 			let t = (Date.now() - millis_start) / 1000.0;
 
-			t /= 8;
+			t /= 16;
 
 			x.font='bold '+n%4+'em Geomanist';
 			x.strokeStyle='rgba('+(Math.tan(t/i)*e)+','+(e*i)+','+(e-Math.sin(t*i)*e)+')';
@@ -454,7 +456,7 @@ function updateState() {
 
 	$('#userTxtInput').val("");
 
-	$("#userTxtInput").blur();
+	$("#userTxtInput").focus();
 
 	let userResponseNlpNorm = userResponseNlp.normalize( parentheses = true, possessive = true, plurals = true, verbs = true, honorifics = true );
 
@@ -549,6 +551,7 @@ goFS.addEventListener("click", function() {
 	$('#'+"fullScreenControl").hide();
 	document.body.requestFullscreen();
 	$('#'+"text-input-box").fadeIn();
+	$("#userTxtInput").focus();
 	$('#goGoGo').fadeIn();
 
 	state.fullScreen = true;
