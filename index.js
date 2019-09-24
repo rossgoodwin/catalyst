@@ -208,13 +208,16 @@ let state = {
 		"Very, very fascinating: {{keyWord}}. Thank you very much for that, {{userName}}."
 	],
 
-	genQuestionTxt: [
+	genQuestion2Txt: [
 		"What is one song that you never understood but would recommend?",
 		"What is your favorite word that is simply fake?",
 		"What is your favorite cheese distraction?",
 		"What would your cat be like?",
 		"If you could go back in time, what would your social media post be?",
-		"What's a song that everyone should hear in their lifetime?",
+		"What's a song that everyone should hear in their lifetime?"
+	],
+
+	genQuestionTxt: [
 		"What is your favorite memory of whistling and why?",
 		"What is the most money you ever saw on the internet?",
 		"What is the most amazing way you've made $1?",
@@ -316,7 +319,7 @@ var main = function(txt) {
 		c.width = n;
 
 		if (state.fullScreen) {
-			n = window.innerWidth;
+			n = window.outerWidth;
 			c.width = n;
 		}
 
@@ -348,12 +351,12 @@ var main = function(txt) {
 	}
 
 	var u3 = function() {
-		var n = window.innerWidth;
+		var n = window.outerWidth;
 
 		c.width = 954*(windowWidthPx/1920);
 
 		if (state.fullScreen) {
-			c.width = window.innerWidth;
+			c.width = window.outerWidth;
 		}
 
 		x.fillStyle = "#96194c"; 
@@ -419,6 +422,7 @@ var goFS = document.getElementById("goFS");
 let eventLoopArr = [
 	"introTxt", "funQuestionTxt",
 	"thankYouTxt", "genQuestionTxt", "thankYouTxt",
+	"genQuestion2Txt", "thankYouTxt",
 	"picQuestionTxt", "picResponse", "thankYouTxt",
 	"collabTxt", "collabResponse", "thankYouTxt",
 	"endTxt"
@@ -501,7 +505,9 @@ function updateState(rawUserInput) {
 		state.keyWordArr.push(...newVerbs);
 	}
 
-	state.keyWordArr.shuffle();
+	state.keyWordArr.shuffle().filter(function(kw){ 
+		return kw.toLowerCase() != "am" && kw.toLowerCase() != "being" && kw.toLowerCase() != "are";
+	});
 
 	if (state.curKey === "introTxt") {
 		state.userName = userResponseNlpNorm.people().out("string").trim().toProperCase();
@@ -556,7 +562,7 @@ goFS.addEventListener("click", function() {
 	// window.setTimeout(function(){
 		$('#loading').show();
 		$('#'+"fullScreenControl").hide();
-		document.body.requestFullscreen();
+		// document.querySelector("html").requestFullscreen();
 		$('#'+"text-input-box").fadeIn();
 		$("#userTxtInput").focus();
 		$('#goGoGo').fadeIn();

@@ -725,4 +725,4 @@ if (window.HTMLDialogElement === undefined) {
   }, true);
 }
 
-export default dialogPolyfill;
+// export dialogPolyfill;
