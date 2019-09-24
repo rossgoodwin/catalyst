@@ -3,6 +3,18 @@ let timeoutControl;
 
 $( window ).on( "load", function(){
 
+let windowWidthPx = window.innerWidth;
+let windowHeightPx = window.innerHeight;
+
+let bgImg = document.getElementById('bg');
+bgImg.width = windowWidthPx;
+
+$('canvas').css('right', (494*(windowWidthPx/1920))+'px');
+$('canvas').css('top', (172*(windowWidthPx/1920))+'px');
+// bgImg.height = windowHeightPx;
+
+
+
 // https://stackoverflow.com/questions/196972/convert-string-to-title-case-with-javascript
 String.prototype.toProperCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -16,6 +28,8 @@ let skipTrue = true;
 
 
 let state = {
+
+	fullScreen: false,
 
 	emojiArr: [
 		"👓",
@@ -126,7 +140,12 @@ var main = function(txt) {
 	$('#userTxtInputLabel').text(txt);
 
 	var c = document.getElementById('myCanvas');
-	c.height=1080;
+	c.height = 556*(windowWidthPx/1920);
+
+	if (state.fullScreen) {
+		c.height = window.innerHeight*2;
+	}
+
 	var x=c.getContext('2d');
 
 	let millis_start = Date.now();
@@ -141,8 +160,13 @@ var main = function(txt) {
 		// millis_start = t;
 		// main
 
-		var n = 2e3;
-		c.width=1920;
+		var n = 954*(windowWidthPx/1920);
+		c.width = n;
+
+		if (state.fullScreen) {
+			n = window.innerWidth;
+			c.width = n;
+		}
 
 		// var canvas = document.getElementById("canvas");
 		// var ctx = canvas.getContext("2d");
@@ -274,12 +298,16 @@ function updateState() {
 
 	let newNouns = userResponseNlpNorm.nouns().out("array");
 
+	console.log(newNouns);
+
 	if (Array.isArray(newNouns) && newNouns.length > 0) {
 		state.nouns.push(...newNouns);
 		state.keyWordArr.push(...newNouns);
 	}
 
 	let newVerbs = userResponseNlpNorm.verbs().toGerund().out("array").map(function(x){ return x.split(' ').pop(); });
+
+	console.log(newVerbs);
 
 	if (Array.isArray(newVerbs) && newVerbs.length > 0) {
 		state.verbs.push(...newVerbs);
@@ -298,10 +326,6 @@ function updateState() {
 		if (!state.userName) {
 			console.log( 'candidate userName:', userResponseNlpNorm.out('string') )
 			state.userName = userResponseNlpNorm.out("string").trim().split(' ').pop().toProperCase();
-		}
-
-		if (!state.userName) {
-			state.userName = "Error";
 		}
 	}
 
@@ -363,6 +387,15 @@ goFS.addEventListener("click", function() {
 	$('#'+"text-input-box").fadeIn();
 	$('#goGoGo').fadeIn();
 
+	state.fullScreen = true;
+
+	$('canvas').css('position', 'static');
+
+	windowWidthPx = window.innerWidth;
+	windowHeightPx = window.innerHeight;
+
+	$('#bg').fadeOut();
+
 	state.curKey = eventLoopArr.pop();
 	state.introTxtChoice = randomChoice(state.introTxt);
 	main( state.introTxtChoice );
@@ -370,6 +403,21 @@ goFS.addEventListener("click", function() {
 }, false);
 
 main("Hello World.");
+
+
+$( window ).resize(function(){
+
+	windowWidthPx = window.innerWidth;
+	windowHeightPx = window.innerHeight;
+
+
+	let bgImg = document.getElementById('bg');
+	bgImg.width = windowWidthPx;
+
+	$('canvas').css('right', (494*(windowWidthPx/1920))+'px');
+	$('canvas').css('top', (172*(windowWidthPx/1920))+'px');
+
+});
 
 
 });
