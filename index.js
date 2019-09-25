@@ -279,7 +279,7 @@ let state = {
 	collabResponse: ["Sorry, I'm quite sure something is wrong now. Please try again later!"],
 
 	endTxt: [
-		"Oh, I think I hear Raya! Just a moment. Let's talk again soon."
+		"Oh, I think I hear Raya! Before I go, let me write something for you based on our entire conversation. Let's talk again soon :)"
 	],
 
 
@@ -639,6 +639,42 @@ function buttonCallback() {
 		// handle image upload
 
 		$("#imageUpload").click();
+
+
+	}
+
+	else if ( state.curKey === 'collabTxt' ) {
+
+		// ajax request
+		$.ajax({
+		    // Your server script to process the upload
+		    url: 'https://a-i.technology/gen',
+		    type: 'POST',
+
+		    // Form data
+		    data: JSON.stringify({
+		    	caption: nlp(userInput).normalize().out("string")
+		    }),
+
+		    // Tell jQuery not to process data or worry about content-type
+		    // You *must* include these options!
+		    cache: false,
+		    contentType: false,
+		    processData: false
+
+		}).done(function(data){
+		// update state w/ exceptions
+
+			let expansion = data.expansion;
+
+			state.collabResponse = [ expansion ];
+
+			updateState( expansion );
+
+
+		});
+
+
 
 
 	}
