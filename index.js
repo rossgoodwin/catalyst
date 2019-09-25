@@ -738,7 +738,7 @@ function buttonCallback() {
 
 	}
 
-	else if (!userInput && state.curKey != "thankYouTxt" && state.curKey != "picResponse" && state.curKey != "collabResponse" && state.curKey != "endTxt" ) {
+	else if (!userInput && state.curKey != "thankYouTxt" && state.curKey != "picResponse" && state.curKey != "collabResponse" && state.curKey != "endTxt" && state.curKey != "endTxtResponse" ) {
 		// popup type something
 		// let dialog = document.querySelector('dialog');
 		dialog.showModal();
@@ -747,10 +747,20 @@ function buttonCallback() {
 		updateState(userInput);
 	}
 
+	return false;
+
 }
 
 $('#goGoGo').text( state.emojiArr.pop() );
 $('#goGoGo').click(buttonCallback);
+
+$(window).keydown(function(evt){
+	if (evt.keyCode === 13) {
+		$('#goGoGo').click();
+		evt.preventDefault();
+		return false;
+	}
+});
 
 goFS.addEventListener("click", function() {
 
