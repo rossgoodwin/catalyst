@@ -186,6 +186,7 @@ let state = {
 	fullScreen: false,
 
 	emojiArr: [
+		"🤖",
 		"👓",
 		"📖",
 		"🦑",
@@ -279,8 +280,10 @@ let state = {
 	collabResponse: ["Sorry, I'm quite sure something is wrong now. Please try again later!"],
 
 	endTxt: [
-		"Oh, I think I hear Raya! Before I go, let me write something for you based on our entire conversation. Let's talk again soon :)"
+		"Oh, I think I hear Raya! Before I go, let me write one last poem for you based on our conversation. Let's chat again soon :)"
 	],
+
+	endTxtResponse: [ "Yikes! Many apologies. It didn't work. Please try again later." ]
 
 
 };
@@ -298,8 +301,9 @@ var main = function(txt) {
 
 	onWindowResize();
 
-	if ( state.curKey === "thankYouTxt" || state.curKey === "picResponse" || state.curKey === "collabResponse" ) {
+	if ( state.curKey === "thankYouTxt" || state.curKey === "picResponse" || state.curKey === "collabResponse" || state.curKey === "endTxtResponse" ) {
 		$('#outputDiv').fadeIn();
+		$('#loading').fadeOut();
 		// $('#text-input-box').fadeIn();
 		$('#goGoGo').focus();
 		typeWrite('outputSpan', txt);
@@ -471,7 +475,7 @@ let eventLoopArr = [
 	"genQuestion2Txt", "thankYouTxt",
 	"picQuestionTxt", "picResponse", "thankYouTxt",
 	"collabTxt", "collabResponse", "thankYouTxt",
-	"endTxt"
+	"endTxt", "endTxtResponse"
 ].reverse();
 
 let ifTrueSkip = function() {
@@ -645,6 +649,8 @@ function buttonCallback() {
 
 	else if ( state.curKey === 'collabTxt' ) {
 
+		$('#loading').fadeIn();
+
 		// ajax request
 		$.ajax({
 		    // Your server script to process the upload
@@ -676,6 +682,59 @@ function buttonCallback() {
 
 
 
+
+	}
+
+	else if ( state.curKey === 'endTxt' ) {
+
+		$('#loading').fadeIn();
+
+		let endWords = [state.userName, ...state.nouns, ...state.verbs].shuffle();
+
+		let endPhrases = [];
+
+		let i,j,temparray,chunk = 2;
+		for (i=0,j=endWords.length; i<j; i+=chunk) {
+		    temparray = endWords.slice(i,i+chunk);
+		    endPhrases.push( temparray.join(' & ') );
+		}
+
+		// ajax request
+		$.ajax({
+		    // Your server script to process the upload
+		    url: 'https://a-i.technology/poe',
+		    type: 'POST',
+
+		    // Form data
+		    data: JSON.stringify({
+		    	// caption: nlp(userInput).normalize().out("string")
+		    	keyword: endWords.pop(),
+		    	title: endPhrases.pop(),
+		    	preseedLines: endPhrases,
+		    	length: 2
+		    }),
+
+		    // Tell jQuery not to process data or worry about content-type
+		    // You *must* include these options!
+		    cache: false,
+		    contentType: false,
+		    processData: false
+
+		}).done(function(data){
+		// update state w/ exceptions
+
+			let poemText = data.poem;
+
+			state.endTxtResponse = [ poemText ];
+
+			updateState( poemText );
+
+			$('#goGoGo').click(function(){
+				location.reload();
+			});
+
+
+		});		
 
 	}
 
