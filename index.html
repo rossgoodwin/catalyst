@@ -64,7 +64,7 @@ input {
 #buttondiv {
 	background-color: rgba(51,51,51,0.5);
 	/*padding: 0;*/
-	padding: 64px;
+	/*padding: 64px;*/
 	position: fixed;
 	/*margin: 0 auto;*/
 	/*bottom: 256px;*/
@@ -74,7 +74,30 @@ input {
 	text-align: center;
 	bottom: 0;
 	margin: 0 auto;
-	padding-bottom: 256px;
+	/*padding-bottom: 256px;*/
+	z-index: 9;
+}
+
+#outputDiv {
+	display: none;
+
+	background-color: rgba(51,51,51,0.5);
+
+	position: fixed;
+
+	padding: 0 16px;
+
+	width: 100%;
+	/*height: 33%;*/
+
+	text-align: left;
+
+	white-space: pre;
+
+	top: 0;
+
+	margin: 0 auto;
+
 	z-index: 9;
 }
 
@@ -109,7 +132,8 @@ input {
 
 #text-input-box {
 	display: none;
-	width: 100%;
+	/*width: 100%;*/
+	width: 85%;
 	margin: 0 auto;
 }
 
@@ -119,9 +143,11 @@ input {
 }
 
 #goGoGo {
-	position: fixed;
-	bottom: 200px;
-	left: 64px;
+	/*position: fixed;*/
+	/*bottom: 200px;*/
+	margin: 0 auto 16px auto;
+	/*left: 64px;*/
+	display: none;
 }
 
 .mdl-textfield__input{
@@ -155,9 +181,18 @@ dialog div p {
 .square-spin > div {
 	z-index: 15;
 	margin: 350px auto;
-	/*transform: scale(4.0,4.0);*/
 	background-color: #FFF;
 	color: #96194c;
+}
+
+#imageUpload {
+	display: none;
+}
+
+.cursor:after {
+    content:"|";
+    opacity: 0;
+    animation: cursor 0.5s infinite;
 }
  
 </style>
@@ -178,6 +213,9 @@ dialog div p {
 
 <img src="./assets/bg.png" id="bg">
 
+<div id="outputDiv">
+	<p id="outputP"><span id="outputSpan"></span></p>
+</div>
 
 <div id="buttondiv">
 	<div id="fullScreenControl">
@@ -186,11 +224,21 @@ dialog div p {
 		<button id="goFS" class="myButton">Hello.</button>
 	</div>
 
+	<form enctype="multipart/form-data">
 	<div id="text-input-box" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-		<label class="mdl-textfield__label" for="userTxtInput" id="userTxtInputLabel">Type here...</label>
-		<input class="mdl-textfield__input" type="text" id="userTxtInput" name="userTxtInput">
-		<button id="goGoGo" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"></button>
+
+			<label class="mdl-textfield__label" for="userTxtInput" id="userTxtInputLabel">Type here...</label>
+			<input class="mdl-textfield__input" type="text" id="userTxtInput" name="userTxtInput">
+
+			
+			<!-- <label for="imageUpload"> -->
+	      <input type="file" capture="camera" accept="image/*" id="imageUpload" name="file">
+			<!-- </label> -->
+
 	</div>
+	</form>
+
+  <button id="goGoGo" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"></button>
 
 
 </div>

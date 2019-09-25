@@ -121,14 +121,50 @@ function speak(txtToSpeak){
 // speak("Testing. Testing. 1. 2. 3. Testing. Testing. 1. 2. 3.")
 // End TTS
 
+function randomIntFromInterval(min,max){
+    return rng.nextRange(min, max+1);
+}
+
+function typeWrite(span, text){
+  $('#'+span).addClass('cursor');
+  // var text = $('#'+span).text();
+  var randInt = 0;
+  for (var j = 0; j < text.length; j++) {
+    randInt += parseInt(randomIntFromInterval(16,64));
+    var typing = window.setTimeout(function(y){
+      $('#'+span).append(text.charAt(y));
+    },randInt, j);
+  };
+  window.setTimeout(function(){
+    $('#'+span).removeClass('cursor');
+  },randInt+2500);
+}
+
 let windowWidthPx = window.innerWidth;
 let windowHeightPx = window.innerHeight;
 
 let bgImg = document.getElementById('bg');
 bgImg.width = windowWidthPx;
 
-$('canvas').css('right', (494*(windowWidthPx/1920))+'px');
-$('canvas').css('top', (175*(windowWidthPx/1920))+'px');
+let onWindowResize = function(){
+
+	windowWidthPx = window.innerWidth;
+	windowHeightPx = window.innerHeight;
+
+
+	let bgImg = document.getElementById('bg');
+	bgImg.width = windowWidthPx;
+
+	$('canvas').css('right', (494*(windowWidthPx/1920))+'px');
+	$('canvas').css('top', (172*(windowWidthPx/1920))+'px');
+
+}
+
+
+onWindowResize();
+
+// $('canvas').css('right', (494*(windowWidthPx/1920))+'px');
+// $('canvas').css('top', (175*(windowWidthPx/1920))+'px');
 // bgImg.height = windowHeightPx;
 
 
@@ -200,12 +236,12 @@ let state = {
 	],
 
 	thankYouTxt: [
-		"{{keyWord}}? Interesting, {{userName}}. Please, tell me more.",
-		"{{keyWord}}! Thanks for sharing that, {{userName}}. Tell me more about it.",
-		"{{keyWord}}... Thank you so much for sharing that, {{userName}}. Tell me more.",
-		"{{keyWord}}. That's fascinating. Thanks so much for letting me know. I'd love to know more.",
-		"{{keyWord}}, how fascinating! {{userName}}: Thank you so much for letting me know that. Please, more.",
-		"Very, very fascinating: {{keyWord}}. Thank you very much for that, {{userName}}. More information?"
+		"{{keyWord}}? Interesting, {{userName}}.",
+		"{{keyWord}}! Thanks for sharing that, {{userName}}.",
+		"{{keyWord}}... Thank you so much for sharing that, {{userName}}.",
+		"{{keyWord}}. That's fascinating, {{userName}}. Thanks for letting me know.",
+		"{{keyWord}}, how fascinating! {{userName}}: Thank you so much for letting me know that.",
+		"Very, very fascinating: {{keyWord}}. Thank you very much for that, {{userName}}."
 	],
 
 	genQuestion2Txt: [
@@ -231,6 +267,8 @@ let state = {
 		"Show me what you look like, {{userName}}!",
 		"{{userName}}, will you show me a picture of your favorite thing in the place you're in?"
 	],
+
+	picResponseNow: false,
 
 	picResponse: ["Sorry, I think something went wrong."],
 
@@ -258,8 +296,21 @@ var displayButtons = function(nButtons, symbolNameArray){
 var main = function(txt) {
 	window.clearTimeout(timeoutControl);
 
-	$('#userTxtInputLabel').text(txt);
-	speak(txt);
+	onWindowResize();
+
+	if ( state.curKey === "thankYouTxt" || state.curKey === "picResponse" || state.curKey === "collabResponse" ) {
+		$('#outputDiv').fadeIn();
+		// $('#text-input-box').fadeIn();
+		$('#goGoGo').focus();
+		typeWrite('outputSpan', txt);
+		$('#userTxtInputLabel').text("");
+		speak(txt);
+	}
+	else {
+		$('#text-input-box').fadeIn();
+		$('#userTxtInputLabel').text(txt);
+		speak(txt);
+	}
 
 	var c = document.getElementById('myCanvas');
 	c.height = 556*(windowWidthPx/1920);
@@ -319,7 +370,7 @@ var main = function(txt) {
 		c.width = n;
 
 		if (state.fullScreen) {
-			n = window.outerWidth;
+			n = window.innerWidth;
 			c.width = n;
 		}
 
@@ -351,12 +402,12 @@ var main = function(txt) {
 	}
 
 	var u3 = function() {
-		var n = window.outerWidth;
+		var n = window.innerWidth;
 
 		c.width = 954*(windowWidthPx/1920);
 
 		if (state.fullScreen) {
-			c.width = window.outerWidth;
+			c.width = window.innerWidth;
 		}
 
 		x.fillStyle = "#96194c"; 
@@ -383,12 +434,7 @@ var main = function(txt) {
 	for (let k = 0, p = Promise.resolve(); k < 65535; k++) {
 		if (k === 0) {
 
-		    p = p.then(_ => new Promise(resolve =>
-		        timeoutControl = window.setTimeout(function () {
-		            $('#loading').fadeOut();
-		            resolve();
-		        },16.666)
-		    ));
+            $('#loading').fadeOut();
 
 		}
 
@@ -472,7 +518,7 @@ let replaceTerms = function(strToRepl) {
 	return newStr;
 }
 
-function updateState(rawUserInput) {
+function updateState(rawUserInput, poem="") {
 	$('#goGoGo').text( state.emojiArr.pop() )
 
 	let userResponseNlp = nlp( rawUserInput );
@@ -523,7 +569,13 @@ function updateState(rawUserInput) {
 		}
 	}
 
-	state.curKey = eventLoopArr.pop();	
+	state.curKey = eventLoopArr.pop();
+
+	if (state.curKey === 'picQuestionTxt' || state.curKey === 'thankYouTxt') {
+		$('#text-input-box').hide();
+		$('#goGoGo').focus();
+	}
+
 	let curTxt = replaceTerms( state[ state.curKey ].shuffle().pop() );
 	main( curTxt );
 }
@@ -540,11 +592,58 @@ dialog.querySelector('.close').addEventListener('click', function() {
 	$("#userTxtInput").focus();
 });
 
+
+$(':file').on('change', function (){
+
+  $('#loading').fadeIn();
+
+  $.ajax({
+    // Your server script to process the upload
+    url: 'https://a-i.technology/img',
+    type: 'POST',
+
+    // Form data
+    data: new FormData($('form')[0]),
+
+    // Tell jQuery not to process data or worry about content-type
+    // You *must* include these options!
+    cache: false,
+    contentType: false,
+    processData: false
+
+  }).done(function(data){
+  	$('#loading').fadeOut();
+
+  	console.log(data);
+
+  	let poemText = data.poemtext;
+  	let firstExpansion = data.expansions[0];
+
+  	state.picResponse = [ poemText ];
+  	state.picResponseNow = true;
+
+  	updateState( data.expansions[0] );
+  });
+
+});
+
 function buttonCallback() {
+
+	$("#outputSpan").text("");
+	$('#outputDiv').fadeOut();
 
 	let userInput = $("#userTxtInput").val().trim();
 
-	if (!userInput && state.curKey != "thankYouTxt" && state.curKey != "picResponse" && state.curKey != "collabResponse" && state.curKey != "endTxt" ) {
+	if ( state.curKey === 'picQuestionTxt' ) {
+
+		// handle image upload
+
+		$("#imageUpload").click();
+
+
+	}
+
+	else if (!userInput && state.curKey != "thankYouTxt" && state.curKey != "picResponse" && state.curKey != "collabResponse" && state.curKey != "endTxt" ) {
 		// popup type something
 		// let dialog = document.querySelector('dialog');
 		dialog.showModal();
@@ -587,19 +686,7 @@ goFS.addEventListener("click", function() {
 main("Hello World.");
 
 
-$( window ).resize(function(){
-
-	windowWidthPx = window.innerWidth;
-	windowHeightPx = window.innerHeight;
-
-
-	let bgImg = document.getElementById('bg');
-	bgImg.width = windowWidthPx;
-
-	$('canvas').css('right', (494*(windowWidthPx/1920))+'px');
-	$('canvas').css('top', (172*(windowWidthPx/1920))+'px');
-
-});
+$( window ).resize(onWindowResize);
 
 
 });
