@@ -273,7 +273,7 @@ let state = {
 	picResponse: ["Sorry, I think something went wrong."],
 
 	collabTxt: [
-		"I think I'd like to collaborate with you, {{userName}}, if you'll let me. Write the beginning of a story for me, and I'll finish it:"
+		"I think I'd like to collaborate with you, {{userName}}, if you'll let me. Write the beginning of a poem for me, and I'll finish it:"
 	],
 
 	collabResponse: ["Sorry, I'm quite sure something is wrong now. Please try again later!"],
@@ -307,7 +307,7 @@ var main = function(txt) {
 		speak(txt);
 	}
 	else {
-		$('#text-input-box').fadeIn();
+		if (state.fullScreen) $('#text-input-box').fadeIn();
 		$('#userTxtInputLabel').text(txt);
 		speak(txt);
 	}
