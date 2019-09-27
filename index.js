@@ -265,7 +265,7 @@ let state = {
 
 	picQuestionTxt: [
 		"{{userName}}: Show me a picture of something cool. I need some inspiration.",
-		"Show me what you look like, {{userName}}!",
+		"Show me a picture that will inspire me, {{userName}}!",
 		"{{userName}}, will you show me a picture of your favorite thing in the place you're in?"
 	],
 
