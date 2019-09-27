@@ -627,6 +627,14 @@ $(':file').on('change', function (){
   	state.picResponseNow = true;
 
   	updateState( data.expansions[0] );
+  }).fail(function(jqXHR, txtStatus){
+
+  	// $('#loading').fadeOut();
+
+  	console.log(txtStatus);
+
+  	updateState( state.picResponse[0] );
+
   });
 
 });
@@ -677,6 +685,12 @@ function buttonCallback() {
 
 			updateState( expansion );
 
+
+		}).fail(function(jqXHR, txtStatus){
+
+			console.log(txtStatus);
+
+			updateState( state.collabResponse[0] );
 
 		});
 
@@ -733,6 +747,16 @@ function buttonCallback() {
 				location.reload();
 			});
 
+
+		}).fail(function(jqXHR, txtStatus){
+
+			console.log(txtStatus);
+
+			updateState( state.endTxtResponse[0] );
+
+			$('#goGoGo').click(function(){
+				location.reload();
+			});
 
 		});		
 
