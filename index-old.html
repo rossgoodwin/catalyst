@@ -1,0 +1,271 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>catalyst</title>
+
+<link href="./css/normalize.css" rel="stylesheet">
+<link href="./css/material.min.css" rel="stylesheet">
+<link href="./css/dialog-polyfill.css" rel="stylesheet">
+<link href="./css/loaders.css" rel="stylesheet">
+
+<style>
+
+@font-face { font-family: Geomanist; src: url('./font/Geomanist-Book.otf'); } 
+@font-face { font-family: Geomanist; font-weight: bold; src: url('./font/Geomanist-Bold.otf');}
+
+html {
+	background-color: #96194c;
+}
+
+body {
+	background-color: #96194c;
+	font-family: Geomanist, sans-serif;
+}
+
+canvas {
+    /*display: fixed;*/
+    display: block;
+    margin: 0 auto;
+    z-index: 3;
+    right: 494px;
+    /*left: 475px;*/
+    top: 172px;
+    position: fixed;
+
+
+}
+
+#bg {
+	position: fixed;
+	top: 0;
+	right: 0;
+	/*left: 0;*/
+	z-index: 1;
+}
+
+p {
+	font-family: 'Geomanist', sans-serif;
+	font-size: 16px;
+	color: #FFF !important;
+}
+
+input {
+	color: #FFF;
+}
+
+#buttonControl {
+	display: none;
+}
+
+#buttonNarrative {
+	display: none;
+}
+
+#buttondiv {
+	background-color: rgba(51,51,51,0.5);
+	/*padding: 0;*/
+	/*padding: 64px;*/
+	position: fixed;
+	/*margin: 0 auto;*/
+	/*bottom: 256px;*/
+/*	top: 64px;
+	left: 50%;*/
+	width: 100%;
+	text-align: center;
+	bottom: 0;
+	margin: 0 auto;
+	/*padding-bottom: 256px;*/
+	z-index: 9;
+}
+
+#outputDiv {
+	display: none;
+
+	background-color: rgba(51,51,51,0.5);
+
+	position: fixed;
+
+	padding: 0 16px;
+
+	width: 100%;
+	/*height: 33%;*/
+
+	text-align: left;
+
+	white-space: pre;
+
+	top: 0;
+
+	margin: 0 auto;
+
+	z-index: 9;
+}
+
+.myButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #a1a7cb;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #a1a7cb;
+	box-shadow:inset 0px 1px 0px 0px #a1a7cb;
+	background-color:transparent;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	border:2px solid #bbe4f0;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: 'Geomanist', sans-serif;
+	/*font-style: italic;*/
+	font-size:28px;
+	/*font-weight: 400;*/
+	padding:15px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #92a5d0;
+}
+.myButton:hover {
+	background-color: rgba(200, 247, 197, 0.5);
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+#text-input-box {
+	display: none;
+	/*width: 100%;*/
+	width: 85%;
+	margin: 0 auto;
+}
+
+#userTxtInputLabel {
+	width: 100%;
+	color: #FFF;
+}
+
+#goGoGo {
+	/*position: fixed;*/
+	/*bottom: 200px;*/
+	margin: 0 auto 16px auto;
+	/*left: 64px;*/
+	display: none;
+}
+
+.mdl-textfield__input{
+    color: #fff !important;
+    /*border-bottom: 1px solid #fff !important;*/
+}
+
+.mdl-button, .mdl-js-button, .mdl-button--fab, .mdl-js-ripple-effect {
+	color: #fff !important;
+}
+
+dialog div p {
+	color: #333 !important;
+}
+
+#loading {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 13;
+	background-color: #96194c;
+}
+
+.loader {
+	transform: scale(2.0, 2.0);
+
+}
+
+.square-spin > div {
+	z-index: 15;
+	margin: 350px auto;
+	background-color: #FFF;
+	color: #96194c;
+}
+
+#imageUpload {
+	display: none;
+}
+
+.cursor:after {
+    content:"|";
+    opacity: 0;
+    animation: cursor 0.5s infinite;
+}
+ 
+</style>
+
+</head>
+
+
+<body>
+
+<div id="loading">
+	<div class="loader">
+		<div class="square-spin"><div>
+			Hello World
+		</div></div>
+	</div>
+	<!-- <div class="square-spin"></div> -->
+</div>
+
+<img src="./assets/bg.png" id="bg">
+
+<div id="outputDiv">
+	<p id="outputP"><span id="outputSpan"></span></p>
+</div>
+
+<div id="buttondiv">
+	<div id="fullScreenControl">
+		<p>turn audio on &amp; tap or click</p>
+		<!-- <p><small>[ tap or click ]</small></p> -->
+		<button id="goFS" class="myButton">Hello.</button>
+	</div>
+
+	<form enctype="multipart/form-data">
+	<div id="text-input-box" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+
+			<label class="mdl-textfield__label" for="userTxtInput" id="userTxtInputLabel">Type here...</label>
+			<input class="mdl-textfield__input" type="text" id="userTxtInput" name="userTxtInput">
+
+			
+			<!-- <label for="imageUpload"> -->
+	      <input type="file" accept="image/*" id="imageUpload" name="file">
+			<!-- </label> -->
+
+	</div>
+	</form>
+
+  <button id="goGoGo" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect"></button>
+
+
+</div>
+
+<canvas id="myCanvas"></canvas>
+
+<dialog class="mdl-dialog">
+	<h4 class="mdl-dialog__title">Type something!</h4>
+	<div class="mdl-dialog__content">
+	  <p>
+	    Communication with AI is a two-way street.
+	  </p>
+	</div>
+	<div class="mdl-dialog__actions">
+	  <button type="button" class="mdl-button close">Okay.</button>
+	</div>
+</dialog>
+
+<script src="./js/dialog-polyfill.js"></script>
+<script src="./js/dialog-polyfill.esm.js"></script>
+<script src="./js/compromise.min.js"></script>
+<script src="./js/material.js"></script>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/loaders.css.js"></script>
+<script src="./index.js"></script>
+
+
+</body>
+
+</html>
