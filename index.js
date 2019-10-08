@@ -194,8 +194,8 @@ let state = {
 		"🐙",
 		"🌊",
 		"📸",
-		"👇",
-		"⏬",
+		// "👇",
+		// "⏬",
 		"🤣",
 		"📩",
 		"😀",
@@ -260,7 +260,13 @@ let state = {
 		"What is the most amazing way you've made $1?",
 		"What are the biggest stereotypes about computers?",
 		"What did you actually think of the world?",
-		"What did you think you were doing on the internet but turned out not to be?"
+		"What did you think you were doing on the internet but turned out not to be?",
+		"What is one song that you never understood but would recommend?",
+		"What is your favorite word that is simply fake?",
+		"What is your favorite cheese distraction?",
+		"What would your cat be like?",
+		"If you could go back in time, what would your social media post be?",
+		"What's a song that everyone should hear in their lifetime?"
 	],
 
 	picQuestionTxt: [
@@ -472,7 +478,7 @@ var goFS = document.getElementById("goFS");
 let eventLoopArr = [
 	"introTxt", "funQuestionTxt",
 	"thankYouTxt", "genQuestionTxt", "thankYouTxt",
-	"genQuestion2Txt", "thankYouTxt",
+	// "genQuestion2Txt", "thankYouTxt",
 	"picQuestionTxt", "picResponse", "thankYouTxt",
 	"collabTxt", "collabResponse", "thankYouTxt",
 	"endTxt", "endTxtResponse"
